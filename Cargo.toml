@@ -4,6 +4,7 @@ version = "0.0.1"
 description = "A fixed-capacity, vector-like array with interior mutability and no ordering guarantees"
 authors = ["Markus Mayer"]
 repository = "https://github.com/sunsided/arraysetcell"
+license-file = "LICENSE.md"
 categories = ["data-structures"]
 keywords = ["interior-mutability"]
 rust-version = "1.68"
