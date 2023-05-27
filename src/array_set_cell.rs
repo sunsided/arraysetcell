@@ -717,6 +717,27 @@ impl<T, const CAP: usize> Iterator for ArraySetCellIntoIter<T, CAP> {
     }
 }
 
+impl<T, const CAP: usize> Default for ArraySetCell<T, CAP> {
+    /// Create a new empty `ArraySetCell`.
+    ///
+    /// The maximum capacity is given by the generic parameter `CAP`.
+    ///
+    /// ## Example
+    ///
+    /// ```
+    /// use arraysetcell::ArraySetCell;
+    ///
+    /// let mut array = ArraySetCell::<_, 16>::default();
+    /// array.push(1);
+    /// array.push(2);
+    /// assert_eq!(array.capacity(), 16);
+    /// assert_eq!(array.into_vec(), &[1, 2]);
+    /// ```
+    fn default() -> Self {
+        ArraySetCell::new()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
