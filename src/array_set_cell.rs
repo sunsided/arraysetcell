@@ -1,4 +1,5 @@
 use crate::error::CapacityError;
+use default_option_arr::none_cell_arr;
 use std::cell::Cell;
 use std::mem::MaybeUninit;
 
@@ -40,18 +41,8 @@ impl<T, const CAP: usize> ArraySetCell<T, CAP> {
     /// assert_eq!(array.into_vec(), &[1, 2]);
     /// ```
     pub fn new() -> Self {
-        let mut uninit_data: MaybeUninit<[Cell<Option<T>>; CAP]> = MaybeUninit::uninit();
-        let mut ptr = uninit_data.as_mut_ptr() as *mut Cell<Option<T>>;
-        for _ in 0..CAP {
-            unsafe {
-                ptr.write(Cell::new(None));
-                ptr = ptr.add(1);
-            }
-        }
-        let data = unsafe { uninit_data.assume_init() };
-
         Self {
-            data,
+            data: none_cell_arr![T; CAP],
             len: Cell::new(0),
         }
     }

@@ -8,3 +8,6 @@ categories = ["data-structures"]
 keywords = ["interior-mutability"]
 rust-version = "1.68"
 edition = "2021"
+
+[dependencies]
+default-option-arr = "0.1.0"
