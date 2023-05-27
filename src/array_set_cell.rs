@@ -1,6 +1,7 @@
 use crate::error::CapacityError;
 use default_option_arr::none_cell_arr;
 use std::cell::Cell;
+use std::fmt::{Debug, Formatter};
 use std::mem::MaybeUninit;
 
 /// `ArraySetCell` is an fixed-capacity, vector-like array with interior mutability
@@ -735,6 +736,24 @@ impl<T, const CAP: usize> Default for ArraySetCell<T, CAP> {
     /// ```
     fn default() -> Self {
         ArraySetCell::new()
+    }
+}
+
+impl<T, const CAP: usize> Debug for ArraySetCell<T, CAP> {
+    /// Creates a debug string representation of the array.
+    ///
+    /// ## Example
+    ///
+    /// ```
+    /// use arraysetcell::ArraySetCell;
+    ///
+    /// let mut array = ArraySetCell::<_, 16>::default();
+    /// array.push(1);
+    /// array.push(2);
+    /// assert_eq!(format!("{:?}", array), "len=2 cap=16");
+    /// ```
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "len={} cap={}", self.len.get(), CAP)
     }
 }
 
