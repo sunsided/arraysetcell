@@ -541,19 +541,35 @@ impl<T, const CAP: usize> From<[Cell<Option<T>>; CAP]> for ArraySetCell<T, CAP> 
     /// assert_eq!(array.len(), 2);
     /// ```
     fn from(value: [Cell<Option<T>>; CAP]) -> Self {
-        let len = value
-            .iter()
-            .map(|item| {
-                // SAFETY: Since the array is full, the pointer is not null and can be dereferenced.
-                if unsafe { &*item.as_ptr() }.is_some() {
-                    1
-                } else {
-                    0
-                }
-            })
-            .sum();
+        let mut uninit_data: MaybeUninit<[Cell<Option<T>>; CAP]> = MaybeUninit::uninit();
+        let mut ptr = uninit_data.as_mut_ptr() as *mut Cell<Option<T>>;
+        let mut len = 0;
+
+        // Fill non-None items to the beginning.
+        for mut cell in value.into_iter() {
+            if !cell.get_mut().is_some() {
+                continue;
+            }
+
+            len += 1;
+            unsafe {
+                ptr.write(cell);
+                ptr = ptr.add(1);
+            }
+        }
+
+        // Fill remaining spots with None.
+        for _ in len..CAP {
+            unsafe {
+                ptr.write(Cell::new(None));
+                ptr = ptr.add(1);
+            }
+        }
+
+        let data = unsafe { uninit_data.assume_init() };
+
         Self {
-            data: value,
+            data,
             len: Cell::new(len),
         }
     }
@@ -975,13 +991,30 @@ mod tests {
     #[test]
     fn test_from_options() {
         let mut array: ArraySetCell<u32, 7> = ArraySetCell::from([
-            Some(1_u32),
+            Some(1),
             Some(2),
             Some(3),
             None,
             Some(11),
             Some(20),
             Some(22),
+        ]);
+        assert_eq!(array.len(), 6);
+        array.retain(|x| *x & 1 == 0);
+        assert_eq!(array.len(), 3);
+        assert_eq!(array.into_vec(), &[2, 20, 22]);
+    }
+
+    #[test]
+    fn test_from_cell_options() {
+        let mut array: ArraySetCell<u32, 7> = ArraySetCell::from([
+            Cell::new(Some(1)),
+            Cell::new(Some(2)),
+            Cell::new(Some(3)),
+            Cell::new(None),
+            Cell::new(Some(11)),
+            Cell::new(Some(20)),
+            Cell::new(Some(22)),
         ]);
         array.retain(|x| *x & 1 == 0);
         assert_eq!(array.len(), 3);
