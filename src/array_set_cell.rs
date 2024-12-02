@@ -773,7 +773,7 @@ mod tests {
     }
 
     #[test]
-    fn test_push() {
+    fn test_push_pop() {
         let mut array: ArraySetCell<u8, 2> = ArraySetCell::new();
         assert_eq!(array.len(), 0);
         assert!(array.is_empty());
@@ -784,7 +784,25 @@ mod tests {
         array.push(1);
         assert!(array.try_push(2).is_ok());
         assert!(array.try_push(3).is_err());
-        assert_eq!(array.into_vec(), &[1, 2]);
+
+        assert_eq!(array.pop(), Some(2));
+        array.push(3);
+
+        assert_eq!(array.into_vec(), &[1, 3]);
+    }
+
+    #[test]
+    fn clear() {
+        let array = ArraySetCell::from([1, 2, 3, 4, 11, 20]);
+        assert_eq!(array.len(), 6);
+        assert!(!array.is_empty());
+        assert!(array.is_full());
+
+        array.clear();
+        assert_eq!(array.len(), 0);
+        assert!(array.is_empty());
+        assert!(!array.is_full());
+        assert_eq!(array.into_vec(), &[]);
     }
 
     #[test]
