@@ -9,9 +9,6 @@
 
 A fixed-capacity, vector-like array with interior mutability and no ordering guarantees.
 
-⚠️ This crate uses a lot of unsafe code to get around initialization and reassignment concerns.
-The behavior is not rigidly tested yet and some edge cases may cause undefined behavior. Use at your own risk.
-
 ```rust
 use std::cell::Cell;
 use arraysetcell::ArraySetCell;

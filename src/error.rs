@@ -32,12 +32,12 @@ impl<T: Any> Error for CapacityError<T> {}
 
 impl<T> Display for CapacityError<T> {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        write!(f, "{}", "insufficient capacity")
+        write!(f, "insufficient capacity")
     }
 }
 
 impl<T> Debug for CapacityError<T> {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        write!(f, "{}: {}", "CapacityError", "insufficient capacity")
+        write!(f, "CapacityError: insufficient capacity")
     }
 }

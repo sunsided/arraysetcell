@@ -304,7 +304,7 @@ impl<T, const CAP: usize> ArraySetCell<T, CAP> {
             }
         }
 
-        return None;
+        None
     }
 
     /// Return a raw pointer to the set's buffer.
@@ -709,7 +709,7 @@ impl<T, const CAP: usize> Iterator for ArraySetCellIntoIter<T, CAP> {
             }
         }
 
-        return None;
+        None
     }
 
     fn size_hint(&self) -> (usize, Option<usize>) {
