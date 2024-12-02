@@ -1,0 +1,42 @@
+[package]
+name = "arraysetcell-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+
+[dependencies.arraysetcell]
+path = ".."
+
+[[bin]]
+name = "push-pop"
+path = "fuzz_targets/push_pop.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "retain"
+path = "fuzz_targets/retain.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "filter-mutate"
+path = "fuzz_targets/filter_mutate.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "iterate"
+path = "fuzz_targets/iterate.rs"
+test = false
+doc = false
+bench = false

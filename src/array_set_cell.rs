@@ -4,7 +4,7 @@ use std::cell::Cell;
 use std::fmt::{Debug, Formatter};
 use std::mem::MaybeUninit;
 
-/// `ArraySetCell` is an fixed-capacity, vector-like array with interior mutability
+/// `ArraySetCell` is a fixed-capacity, vector-like array with interior mutability
 /// and no ordering guarantees.
 pub struct ArraySetCell<T, const CAP: usize> {
     /// The underlying array.
