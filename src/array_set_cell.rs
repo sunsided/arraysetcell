@@ -762,10 +762,42 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_new() {
+        let array: ArraySetCell<u8, 16> = ArraySetCell::new();
+        assert_eq!(array.len(), 0);
+        assert!(array.is_empty());
+        assert!(!array.is_full());
+        assert_eq!(array.capacity(), 16);
+        assert_eq!(array.remaining_capacity(), 16);
+        assert_eq!(array.into_vec(), &[]);
+    }
+
+    #[test]
+    fn test_push() {
+        let mut array: ArraySetCell<u8, 2> = ArraySetCell::new();
+        assert_eq!(array.len(), 0);
+        assert!(array.is_empty());
+        assert!(!array.is_full());
+        assert_eq!(array.capacity(), 2);
+        assert_eq!(array.remaining_capacity(), 2);
+
+        array.push(1);
+        assert!(array.try_push(2).is_ok());
+        assert!(array.try_push(3).is_err());
+        assert_eq!(array.into_vec(), &[1, 2]);
+    }
+
+    #[test]
     fn retain_odd() {
         let mut array = ArraySetCell::from([1, 2, 3, 4, 11, 20]);
+        assert_eq!(array.len(), 6);
+        assert!(!array.is_empty());
+        assert!(array.is_full());
+
         array.retain(|x| *x & 1 != 0);
         assert_eq!(array.len(), 3);
+        assert!(!array.is_empty());
+        assert!(!array.is_full());
         assert_eq!(array.into_vec(), &[1, 3, 11]);
     }
 
@@ -818,6 +850,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(static_mut_refs)]
     fn retain_does_not_drop_multiple_times() {
         static mut ORIGINAL_DISPOSED: usize = 0;
         static mut REFERENCE_DISPOSED: usize = 0;
