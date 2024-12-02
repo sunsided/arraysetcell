@@ -228,19 +228,23 @@ impl<T, const CAP: usize> ArraySetCell<T, CAP> {
         if len == 0 {
             return None;
         }
+        self.find_and_remove_last().map(|item| {
+            self.len.set(len - 1);
+            item
+        })
+    }
 
-        // TODO: Optimize
-        for item in self.data.iter().rev() {
-            if unsafe { &*item.as_ptr() }.is_none() {
+    fn find_and_remove_last(&mut self) -> Option<T> {
+        // TODO: Optimize logic, e.g. keep track of last used index.
+        let reverse_iter = self.data.iter().rev();
+        for potential_item in reverse_iter {
+            if unsafe { &*potential_item.as_ptr() }.is_none() {
                 continue;
             }
-
-            let item = item.replace(None);
+            let item = potential_item.replace(None);
             debug_assert!(item.is_some());
-            self.len.set(len - 1);
             return item;
         }
-
         None
     }
 
@@ -942,5 +946,29 @@ mod tests {
             assert_eq!(ORIGINAL_DISPOSED, 7);
             assert_eq!(REFERENCE_DISPOSED, 4);
         }
+    }
+
+    #[test]
+    fn test_filter_mut() {
+        let mut array_set_cell = ArraySetCell::<_, 5>::new();
+
+        // Push sample values
+        array_set_cell.push(Some(1));
+        array_set_cell.push(Some(2));
+        array_set_cell.push(Some(3));
+
+        // Closure function to look for a specific value, mutating if needed.
+        let result = array_set_cell
+            .filter_mut(|item| {
+                if *item == Some(2) {
+                    Some(*item) // Return option if condition met.
+                } else {
+                    None
+                }
+            })
+            .flatten();
+
+        // Validate that the result is as expected
+        assert_eq!(result, Some(2));
     }
 }
