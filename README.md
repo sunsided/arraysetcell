@@ -1,5 +1,12 @@
 # ArraySetCell
 
+[![Crates.io](https://img.shields.io/crates/v/arraysetcell)](https://crates.io/crates/arraysetcell)
+[![Crates.io](https://img.shields.io/crates/l/arraysetcell)](https://crates.io/crates/arraysetcell)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/sunsided/arraysetcell/rust.yml)](https://github.com/sunsided/arraysetcell/actions/workflows/rust.yml)
+[![Safety Dance][safety-image]][safety-link]
+[![docs.rs](https://img.shields.io/docsrs/arraysetcell)](https://docs.rs/arraysetcell/)
+[![codecov](https://codecov.io/gh/sunsided/arraysetcell/graph/badge.svg?token=5VG5X1KZ8C)](https://codecov.io/gh/sunsided/arraysetcell)
+
 A fixed-capacity, vector-like array with interior mutability and no ordering guarantees.
 
 ⚠️ This crate uses a lot of unsafe code to get around initialization and reassignment concerns.
@@ -30,3 +37,7 @@ fn it_works() {
     assert_eq!(iter.next(), None);
 }
 ```
+
+[safety-image]: https://img.shields.io/badge/unsafe-yes-yellow.svg
+
+[safety-link]: https://github.com/rust-secure-code/safety-dance/
