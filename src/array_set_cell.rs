@@ -971,4 +971,20 @@ mod tests {
         // Validate that the result is as expected
         assert_eq!(result, Some(2));
     }
+
+    #[test]
+    fn test_from_options() {
+        let mut array: ArraySetCell<u32, 7> = ArraySetCell::from([
+            Some(1_u32),
+            Some(2),
+            Some(3),
+            None,
+            Some(11),
+            Some(20),
+            Some(22),
+        ]);
+        array.retain(|x| *x & 1 == 0);
+        assert_eq!(array.len(), 3);
+        assert_eq!(array.into_vec(), &[2, 20, 22]);
+    }
 }
